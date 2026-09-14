@@ -1,4 +1,4 @@
-import { AppHeader, IconLocalLibrary } from "@ds/core";
+import { AppHeader, IconLocalLibrary } from "@luislongo/ds-core";
 import { type ReactNode } from "react";
 
 interface AppLayoutProps {

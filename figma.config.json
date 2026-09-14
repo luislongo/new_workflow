@@ -1,0 +1,6 @@
+{
+  "codeConnect": {
+    "include": ["src/**/*.tsx"],
+    "exclude": ["src/App.figma.tsx"]
+  }
+}

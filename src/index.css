@@ -1,0 +1,93 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600&display=swap");
+@import "tailwindcss";
+
+@theme {
+  /* ── Colors — derived from @ds/core design tokens ── */
+
+  --color-primary-50:  #F3EFF9;
+  --color-primary-100: #D7CBEA;
+  --color-primary-200: #BBA6DC;
+  --color-primary-300: #9F82CE;
+  --color-primary-400: #835DBF;
+  --color-primary-500: #6739B1;
+  --color-primary-600: #542F90;
+  --color-primary-700: #412470;
+  --color-primary-800: #2E1A4F;
+  --color-primary-900: #1B0F2F;
+  --color-primary-950: #08050E;
+
+  --color-neutral-50:  #E0E0E1;
+  --color-neutral-100: #C7C8C9;
+  --color-neutral-200: #AEAFB2;
+  --color-neutral-300: #96969A;
+  --color-neutral-400: #7D7E82;
+  --color-neutral-500: #64656A;
+  --color-neutral-600: #545559;
+  --color-neutral-700: #444548;
+  --color-neutral-800: #343537;
+  --color-neutral-900: #242426;
+  --color-neutral-950: #141415;
+
+  --color-light-800: #F2F2F2;
+  --color-light-900: #FAFAFA;
+  --color-light-full: #FFFFFF;
+
+  --color-danger-50:  #FEEDEC;
+  --color-danger-100: #FDDBD8;
+  --color-danger-200: #FCB5B0;
+  --color-danger-300: #FA8C82;
+  --color-danger-400: #FA5B43;
+  --color-danger-500: #DA3E1D;
+  --color-danger-600: #AF3015;
+  --color-danger-700: #86220D;
+  --color-danger-800: #5F1606;
+  --color-danger-900: #3A0A02;
+  --color-danger-950: #280501;
+
+  /* ── Spacing — design system 4 px grid ── */
+
+  --spacing-0:    0px;
+  --spacing-050:  2px;
+  --spacing-100:  4px;
+  --spacing-150:  6px;
+  --spacing-200:  8px;
+  --spacing-300:  12px;
+  --spacing-400:  16px;
+  --spacing-600:  24px;
+  --spacing-800:  32px;
+  --spacing-1000: 40px;
+  --spacing-1200: 48px;
+  --spacing-1600: 64px;
+  --spacing-2400: 96px;
+  --spacing-4000: 160px;
+
+  /* ── Border radius ── */
+
+  --radius-100:  4px;
+  --radius-200:  8px;
+  --radius-400:  16px;
+  --radius-full: 9999px;
+
+  /* ── Typography ── */
+
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --text-xs:   0.75rem;   /* 12 px */
+  --text-sm:   0.875rem;  /* 14 px */
+  --text-base: 1rem;      /* 16 px */
+  --text-lg:   1.125rem;  /* 18 px */
+  --text-xl:   1.25rem;   /* 20 px */
+  --text-2xl:  1.5rem;    /* 24 px */
+  --text-3xl:  1.875rem;  /* 30 px */
+  --text-4xl:  2rem;      /* 32 px — extra, used for KPI values */
+}
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+}

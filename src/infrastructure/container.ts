@@ -1,3 +1,9 @@
-import type { IContainer } from '../application/IContainer'
+import type { IContainer } from "../application/IContainer";
+import { CreateEmpreendimento } from "../application/usecases/CreateEmpreendimento";
+import { InMemoryEmpreendimentoRepository } from "./repositories/InMemoryEmpreendimentoRepository";
 
-export const container: IContainer = {}
+const empreendimentoRepository = new InMemoryEmpreendimentoRepository();
+
+export const container: IContainer = {
+  createEmpreendimento: new CreateEmpreendimento(empreendimentoRepository),
+};

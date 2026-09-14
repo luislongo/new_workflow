@@ -35,7 +35,7 @@ Se você está trabalhando nesta feature, certifique-se de atualizar este arquiv
 
 ---
 
-## FASE 1 — Camada de domínio e aplicação [Não Iniciada ⏳]
+## FASE 1 — Camada de domínio e aplicação [Concluída ✅]
 
 > Objetivo: estrutura TypeScript pura das camadas `domain/` e `application/`. Sem React, sem infraestrutura. Verificação: `npm run build` e `npm run lint` passam sem erros.
 
@@ -112,7 +112,7 @@ O restante do arquivo (KpiIndicador, Obra, etc.) permanece intocado. Direção d
 
 ---
 
-## FASE 2 — Camada de infraestrutura + rotas [Não Iniciada ⏳]
+## FASE 2 — Camada de infraestrutura + rotas [Concluída ✅]
 
 > Objetivo: repositório em memória, container com injeção de dependência e rotas no `App.tsx`. Verificação: `npm run build` passa; abrir `localhost:5173` redireciona para `/empreendimento` sem erros no console.
 
@@ -173,7 +173,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 ---
 
-## FASE 3 — AppLayout responsivo + Navbar [Não Iniciada ⏳]
+## FASE 3 — AppLayout responsivo + Navbar [Concluída ✅]
 
 > Objetivo: `AppHeader` com Navbar de 3 abas, layout responsivo via `useMediaQuery`. Verificação: Navbar aparece no browser com ícones corretos; aba "Empreendimento" marcada como ativa; abas desabilitadas não respondem a cliques; no mobile o rótulo some.
 
@@ -215,7 +215,7 @@ Mudanças em relação ao estado atual:
 
 ---
 
-## FASE 4 — Tela AdicionarEmpreendimento [Não Iniciada ⏳]
+## FASE 4 — Tela AdicionarEmpreendimento [Concluída ✅]
 
 > Objetivo: formulário completo com todos os campos, validação Zod, layout responsivo de duas colunas, submit e cancel. Verificação de todos os CAs (CA-001 a CA-014). Ao final: `npm run lint`, `npm run build`, teste no browser desktop e mobile.
 

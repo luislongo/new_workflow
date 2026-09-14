@@ -37,6 +37,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             <NavbarTab
               size={size}
               label="Empreendimento"
+              aria-label="Empreendimento"
               icon={<IconAddBusiness />}
               active={pathname === "/empreendimento"}
               onClick={() => navigate("/empreendimento")}
@@ -44,19 +45,21 @@ export function AppLayout({ children }: AppLayoutProps) {
             <NavbarTab
               size={size}
               label="Dashboards"
+              aria-label="Dashboards"
               icon={<IconDashboard />}
               disabled
             />
             <NavbarTab
               size={size}
               label="Relatórios"
+              aria-label="Relatórios"
               icon={<IconEventNote />}
               disabled
             />
           </Navbar>
         }
       />
-      <main className="flex-1 w-full max-w-[800px] mx-auto pt-[48px] px-0 pb-0 lg:px-0 max-[1023px]:px-[12px] max-[1023px]:pb-[12px]">
+      <main className="flex-1 w-full max-w-[800px] mx-auto pt-1200 px-300 pb-300 lg:px-0 lg:pb-0">
         {children}
       </main>
     </div>

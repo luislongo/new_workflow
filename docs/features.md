@@ -18,7 +18,7 @@ A aplicação é um sistema de **gestão de empreendimentos** (projetos imobili�
 
 **Campos obrigatórios**: Nome e E-mail. Tipo é obrigatório (sem seleção bloqueia o submit). CEP, Endereço e Proprietário são opcionais.
 
-**Layout responsivo**: Desktop (≥ 1024 px) — DoubleColumn com campos à esquerda e tipo à direita. Mobile (< 768 px) — coluna única, campos antes, tipo depois.
+**Layout responsivo**: Desktop (≥ 1024 px) — DoubleColumn com campos à esquerda e tipo à direita. Mobile (< 1024 px) — coluna única, campos antes, tipo depois. Breakpoint único do projeto — ver `docs/patterns.md`.
 
 **Rota de entrada**: `/` redireciona para `/empreendimento`.
 

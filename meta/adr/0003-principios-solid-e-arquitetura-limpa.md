@@ -181,3 +181,11 @@ Caminho preferido: quando uma tela precisar desses dados de verdade, o mock vira
 ## Revisão
 
 **2026-09-09**: Decisão inicial. Arquitetura implementada com `InMemoryProjectRepository`.
+
+**2026-09-14**: Primeira feature real implementada (`AdicionarEmpreendimento`). Três adendos:
+
+1. **Convenção de use cases — método `execute()`**: o método público de cada use case se chama `execute()`. Decidido aqui como precedente para o projeto. Veja `src/application/usecases/CreateEmpreendimento.ts`.
+
+2. **Exceção `mocks → domain`**: `src/mocks/types.ts` reexporta tipos de `src/domain/Empreendimento.ts` em vez de redeclará-los. A direção é permitida — `domain` não importa de `mocks`. O texto original afirmava que "o vocabulário não é o do domínio"; essa premissa era prospectiva; para `Empreendimento` o vocabulário convergiu. A exceção vale apenas para re-export de tipos — `mocks/` nunca instancia nem depende de lógica de `domain`.
+
+3. **Vocabulário**: o projeto usa `Empreendimento` (não `Project`) como entidade de domínio. As referências a `Project`/`IProjectRepository`/`InMemoryProjectRepository` neste ADR são artefatos da decisão inicial e devem ser lidas como exemplos genéricos da estrutura.

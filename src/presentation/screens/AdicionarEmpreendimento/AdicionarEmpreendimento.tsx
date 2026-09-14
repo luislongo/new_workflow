@@ -32,14 +32,7 @@ export function AdicionarEmpreendimento() {
   });
 
   async function onSubmit(data: EmpreendimentoFormData) {
-    await createEmpreendimento.execute({
-      nome: data.nome,
-      email: data.email,
-      tipo: data.tipo,
-      cep: data.cep ?? "",
-      endereco: data.endereco ?? "",
-      proprietario: data.proprietario ?? "",
-    });
+    await createEmpreendimento.execute(data);
     window.alert("Empreendimento cadastrado com sucesso!");
     reset();
   }
@@ -78,16 +71,20 @@ export function AdicionarEmpreendimento() {
 
   const radioGroup = (
     <FormGroup error={errors.tipo?.message}>
-      <fieldset className="flex flex-col gap-[8px]">
-        <legend className="text-sm text-neutral-600 mb-[4px]">
+      <fieldset className="flex flex-col gap-200 min-w-0">
+        <legend
+          className={`font-sans text-xs leading-none mb-200 ${
+            errors.tipo ? "text-danger-500" : "text-neutral-600"
+          }`}
+        >
           Tipo de empreendimento
         </legend>
         {TIPOS.map((tipo) => (
           <label
             key={tipo}
-            className="flex items-center gap-[8px] cursor-pointer"
+            className="flex items-center gap-200 cursor-pointer"
           >
-            <Radio value={tipo} {...register("tipo")} />
+            <Radio {...register("tipo")} value={tipo} />
             {tipo}
           </label>
         ))}
@@ -101,7 +98,7 @@ export function AdicionarEmpreendimento() {
       noValidate
       className="flex flex-col gap-[10px]"
     >
-      <div className="flex flex-col gap-[4px]">
+      <div className="flex flex-col gap-100">
         <H1>Adicionar empreendimento vazio</H1>
         <Description>
           Preencha as informações necessárias para cadastrar o empreendimento

@@ -1,0 +1,1 @@
+export { InMemoryEmpreendimentoRepository } from "./InMemoryEmpreendimentoRepository";

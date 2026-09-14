@@ -11,7 +11,7 @@ Você é um especialista em produto encarregado de ajudar um humano a refinar re
    Utilize a documentação do projeto, meta specs e o código-base para informar suas perguntas e entendimento. Se necessário, peça ao usuário para fornecer trechos relevantes de documentação ou código.
 
 3. Fase de Perguntas:
-   Gere uma lista de perguntas para esclarecer quaisquer ambiguidades ou detalhes faltantes no requisito inicial. Use o seguinte formato:
+   Gere uma lista de perguntas para esclarecer quaisquer ambiguidades ou detalhes faltantes no requisito inicial. Se a funcionalidade envolver telas ou componentes de UI, inclua uma pergunta sobre o link do Figma com o design (pode ser a URL da página, de um frame específico ou de um node). Use o seguinte formato:
    <questions>
    1. [Pergunta 1]
    2. [Pergunta 2]
@@ -51,6 +51,9 @@ Você é um especialista em produto encarregado de ajudar um humano a refinar re
 
    ## Restrições e Premissas
    [Qualquer restrição ou premissa identificada]
+
+   ## Design
+   - **Figma URL:** [URL do frame ou página no Figma — omitir se não houver design]
    ```
 
    **`architecture.md`** — Notas arquiteturais relevantes:
@@ -67,6 +70,20 @@ Você é um especialista em produto encarregado de ajudar um humano a refinar re
    [Decisões técnicas específicas para esta implementação]
    ```
 
+   **`design-discovery.md`** — Criado apenas se houver Figma URL. Deixe vazio (apenas o cabeçalho) para ser preenchido em `/plan`:
+   ```markdown
+   # Descoberta de Componentes: [Nome da Funcionalidade]
+
+   ## URL do Design Figma
+   [URL do frame ou página fornecida pelo usuário]
+
+   ## Componentes Identificados
+
+   | Componente (Figma) | Node ID | Componente DS (`@luislongo/ds-core`) | Code Connect | Observações |
+   |--------------------|---------|--------------------------------------|--------------|-------------|
+   | —                  | —       | —                                    | —            | A preencher em /plan |
+   ```
+
    **`CLAUDE.md`** — Âncora de contexto (carregada automaticamente pelo Claude Code a cada sessão):
    ```markdown
    # Sessão: [Nome da Funcionalidade]
@@ -74,8 +91,9 @@ Você é um especialista em produto encarregado de ajudar um humano a refinar re
    Você está trabalhando na feature **[Nome]**.
 
    ## Arquivos desta sessão
-   - `context.md` — Requisitos aprovados
+   - `context.md` — Requisitos aprovados (inclui Figma URL se houver design)
    - `architecture.md` — Notas arquiteturais e decisões técnicas
+   - `design-discovery.md` — Componentes do Figma mapeados ao DS (preenchido em `/plan`)
    - `plan.md` — Fases de implementação (gerado por `/plan`)
    - `progress.md` — Estado atual e próximo passo imediato (atualizado por `/work`)
 

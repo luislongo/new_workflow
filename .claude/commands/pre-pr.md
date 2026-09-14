@@ -5,6 +5,18 @@ model: opus
 
 Estamos quase terminando o trabalho neste branch e nos preparando para abrir um pull request. Agora é hora de fazer as verificações finais e limpezas para garantir que estamos alinhados com nossos padrões e objetivos.
 
+## Validação Visual (quando houver design Figma)
+
+Antes de invocar os agents, verifique se existe `.claude/sessions/*/design-discovery.md` com uma Figma URL. Se sim:
+
+1. Para cada tela ou frame implementado nesta feature, chame `get_screenshot` no node correspondente do Figma.
+2. Compare visualmente o screenshot do Figma com a implementação — foco em layout, espaçamentos, cores e componentes usados.
+3. Liste as discrepâncias encontradas (se houver) e corrija as que forem objetivas (componente errado, cor fora do token, espaçamento claramente diferente). Discrepâncias subjetivas ou fora de escopo devem ser listadas para revisão do usuário.
+
+Só avance para os agents após concluir ou pular esta etapa.
+
+---
+
 Você deve invocar os seguintes 5 agents em PARALELO usando a ferramenta Agent. Executar em paralelo é crucial para minimizar o tempo total de execução.
 
 Invoque os seguintes agents em PARALELO usando a ferramenta Agent (`subagent_type` deve corresponder exatamente ao `name` definido no frontmatter do agent):

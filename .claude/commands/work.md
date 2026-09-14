@@ -13,8 +13,9 @@ Para trabalhar nisso, siga esta ordem:
 1. Leia `.claude/sessions/$ARGUMENTS/CLAUDE.md` para o briefing da sessão
 2. Leia `.claude/sessions/$ARGUMENTS/progress.md` se existir — indica onde a sessão anterior parou e qual é o próximo passo imediato
 3. Leia os demais arquivos em `.claude/sessions/$ARGUMENTS/` (context.md, architecture.md, plan.md)
-4. Revise o plan.md e identifique qual Fase está atualmente em progresso
-5. Apresente ao usuário um resumo do estado atual e um plano para abordar a próxima fase
+4. Se existir `.claude/sessions/$ARGUMENTS/design-discovery.md`, leia-o — ele contém a Figma URL e a tabela de componentes mapeados ao DS via Code Connect. Ao implementar fases de UI, use esses mapeamentos para importar os componentes corretos de `@luislongo/ds-core`; se precisar de mais detalhes de um componente específico, use `get_design_context` com a Figma URL ou node ID registrado.
+5. Revise o plan.md e identifique qual Fase está atualmente em progresso
+6. Apresente ao usuário um resumo do estado atual e um plano para abordar a próxima fase
 
 Importante:
 
@@ -26,6 +27,7 @@ Quando você desenvolver o código para a fase atual, use sub-agentes quando apr
 Use a ferramenta **TodoWrite** para rastrear as tarefas da fase atual enquanto trabalha, marcando cada item como completo ao concluir.
 
 Toda vez que completar uma fase do plano:
+- Se a fase implementou UI e há uma Figma URL disponível, chame `get_screenshot` para o frame ou node correspondente e compare visualmente com o que foi implementado. Anote discrepâncias relevantes antes de apresentar ao usuário.
 - Pause e peça ao usuário para validar seu código.
 - Faça as mudanças necessárias até ser aprovado
 - Atualize a fase correspondente no arquivo plan.md marcando o que foi feito e adicionando comentários úteis para o desenvolvedor que abordará as próximas fases, especialmente sobre questões, decisões, etc.

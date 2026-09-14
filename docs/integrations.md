@@ -10,9 +10,9 @@
 
 **Pré-requisito**: o design system precisa estar buildado antes de iniciar o dev server:
 ```bash
-cd ../design_system && npm run build
+cd ../mba/repos/design_system && npm run build
 # ou usar o script raiz:
-# ../../dev.ps1
+# ../mba/repos/dev.ps1
 ```
 
 **Componentes consumidos pelas telas:**

@@ -13,11 +13,14 @@
     "figma:connect:unpublish": "figma connect unpublish"
   },
   "dependencies": {
-    "@ds/core": "file:../design_system",
+    "@ds/core": "file:../mba/repos/design_system",
     "@faker-js/faker": "^9.9.0",
+    "@hookform/resolvers": "^5.9.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-router-dom": "^7.18.3"
+    "react-hook-form": "^7.88.0",
+    "react-router-dom": "^7.18.3",
+    "zod": "^3.25.58"
   },
   "devDependencies": {
     "@figma/code-connect": "^1.5.3",

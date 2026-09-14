@@ -36,18 +36,21 @@ src/
 │   │   └── InMemoryProjectRepository.ts
 │   ├── container.ts
 │   └── index.ts
-└── presentation/                             # componentes React
-    ├── context/
-    │   └── ContainerContext.tsx              # ContainerProvider + useContainer
-    ├── components/
-    │   └── AppLayout/
-    └── screens/
-        ├── Dashboard/
-        ├── FormScreen/
-        ├── DataTableScreen/
-        ├── RegistrationFlow/
-        └── CompositeComponent/
+├── presentation/                             # componentes React
+│   ├── context/
+│   │   └── ContainerContext.tsx              # ContainerProvider + useContainer
+│   ├── components/
+│   │   └── AppLayout/                        # layout global (AppHeader do @ds/core)
+│   └── screens/                              # uma pasta por tela, criada conforme implementada
+└── mocks/                                    # dados de demonstração — fora das camadas
+    ├── types.ts
+    ├── dashboard.ts
+    ├── empreendimentos.ts
+    ├── relatorios.ts
+    └── index.ts
 ```
+
+`presentation/screens/` e as telas ainda não existem — cada uma é criada quando for implementada.
 
 Cada módulo de tela segue:
 ```
@@ -63,7 +66,8 @@ NomeTela/
 | `domain` | Nenhuma camada do projeto |
 | `application` | `domain` |
 | `infrastructure` | `domain`, `application` |
-| `presentation` | `application` (interfaces, use cases) |
+| `presentation` | `application` (interfaces, use cases) e, temporariamente, `mocks` |
+| `mocks` | Nenhuma camada do projeto |
 | `App.tsx` | Todas as camadas (composition root) |
 
 **Proibido**: `presentation` importar de `infrastructure` diretamente.
@@ -75,11 +79,32 @@ Telas acessam use cases via `useContainer()` — nunca instanciam repositórios 
 ```tsx
 import { useContainer } from '../../context/ContainerContext'
 
-export function Dashboard() {
+export function MinhaTela() {
   const { getProjects } = useContainer()
   // ...
 }
 ```
+
+## Dados de Mock
+
+`src/mocks/` reúne dados de demonstração gerados com `@faker-js/faker` (locale `pt_BR`). Cada módulo chama `faker.seed(42)` no topo, então a saída é determinística entre execuções. O módulo existe para popular telas antes de haver uma fonte de dados real.
+
+| Arquivo | Exporta | Dados |
+|---------|---------|-------|
+| `dashboard.ts` | `fetchDashboardData()` | `DashboardData`: 6 KPIs, evolução de custo por mês, avanço previsto vs. realizado por obra, indicadores por etapa e materiais críticos |
+| `empreendimentos.ts` | `fetchEmpreendimentos()` | 10 `Empreendimento` (nome, e-mail, CEP, endereço, proprietário, tipo) |
+| `relatorios.ts` | `fetchObras()`, `fetchLancamentos()` | 10 `Obra` e 10 `LancamentoFinanceiro` |
+| `types.ts` | os tipos dos três módulos | — |
+
+As funções são `async` e retornam o array já materializado — a assinatura imita uma chamada de rede para que a troca por uma fonte real não mude o call site.
+
+Três ressalvas:
+
+1. **Não passa pelo container.** Os mocks não implementam `IProjectRepository` e não são injetados via `useContainer()`.
+2. **O vocabulário não é o do domínio.** `Empreendimento`, `Obra` e `LancamentoFinanceiro` são de construção civil; a entidade de `domain/` é `Project`. Os dois conjuntos ainda não foram reconciliados.
+3. **`@faker-js/faker` é uma dependência de runtime**, não de desenvolvimento — enquanto os mocks forem importados por código de tela, o faker entra no bundle de produção.
+
+Quando uma tela deixar de ser protótipo visual, o mock vira a fonte de uma implementação de repositório em `infrastructure/` e a tela passa a consumir o use case. Ver [ADR-0003](../meta/adr/0003-principios-solid-e-arquitetura-limpa.md).
 
 ## Componentes
 

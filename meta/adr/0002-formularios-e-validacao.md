@@ -8,7 +8,7 @@ Ativa
 
 ## Contexto
 
-A aplicação tem dois pontos de entrada de dados do usuário: o `FormScreen` (formulário de projeto) e o `RegistrationFlow` (wizard multi-etapas). Precisamos decidir como gerenciar estado de formulário e validação nessas telas.
+A aplicação tem dois tipos de entrada de dados do usuário: um formulário de cadastro direto e um wizard multi-etapas. Precisamos decidir como gerenciar estado de formulário e validação nesses casos.
 
 Forças em jogo:
 
@@ -28,7 +28,7 @@ Vamos usar **React Hook Form** para gerenciamento de estado de formulário e **Z
 
 O `FormGroup` do design system envolve campo + label + mensagem de erro — o campo interno recebe `ref` do `register()` via `forwardRef`.
 
-**Esta decisão documenta a intenção; a implementação efetiva acontece quando o scaffold de cada tela for preenchido.**
+**As dependências já estão instaladas; a implementação efetiva acontece quando cada tela for construída.**
 
 ## Alternativas Consideradas
 
@@ -90,22 +90,19 @@ O `FormGroup` do design system envolve campo + label + mensagem de erro — o ca
 
 ### Negativas
 
-- Duas dependências novas a serem instaladas: `react-hook-form` e `zod` (+ `@hookform/resolvers`)
+- Três dependências de runtime a mais: `react-hook-form`, `zod` e `@hookform/resolvers`
 - Os componentes do `@ds/core` precisam suportar `forwardRef` para integração com `register()` — a maioria já suporta; verificar antes de usar
 
 ### Neutras
 
-- O schema Zod vive junto ao arquivo de tela (ex.: `FormScreen.schema.ts`) — sem camada de domínio separada no scaffold inicial
+- O schema Zod vive junto ao arquivo de tela (ex.: `<NomeTela>.schema.ts`) — sem camada de domínio separada no scaffold inicial
 
 ## Notas de Implementação
 
-```bash
-# Instalação (quando a tela for implementada)
-npm install react-hook-form zod @hookform/resolvers
-```
+Dependências já instaladas (2026-09-13): `react-hook-form` ^7.88.0, `zod` ^3.25.58, `@hookform/resolvers` ^5.9.1.
 
 ```ts
-// FormScreen.schema.ts
+// <NomeTela>.schema.ts
 import { z } from 'zod'
 
 export const projectSchema = z.object({
@@ -120,10 +117,10 @@ export type ProjectFormData = z.infer<typeof projectSchema>
 ```
 
 ```tsx
-// FormScreen.tsx
+// <NomeTela>.tsx
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { projectSchema, type ProjectFormData } from './FormScreen.schema'
+import { projectSchema, type ProjectFormData } from './<NomeTela>.schema'
 
 const { register, handleSubmit, formState: { errors } } = useForm<ProjectFormData>({
   resolver: zodResolver(projectSchema),
@@ -140,4 +137,6 @@ A decisão é bem-sucedida se:
 
 ## Revisão
 
-**2026-09-09**: Decisão inicial. Implementação efetiva pendente — telas ainda em scaffold. Instalar dependências quando a implementação das telas começar.
+**2026-09-09**: Decisão inicial. Implementação efetiva pendente — nenhuma tela construída ainda.
+
+**2026-09-13**: Dependências instaladas: `react-hook-form` ^7.88.0, `zod` ^3.25.58, `@hookform/resolvers` ^5.9.1. Removidas as referências a nomes de tela — a ADR descreve o padrão, não telas específicas. O `zod` resolveu para a linha 3.x; `@hookform/resolvers` 5.x suporta Zod 3 e 4, então uma migração futura para Zod 4 não exige trocar o resolver.

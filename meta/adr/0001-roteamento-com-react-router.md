@@ -8,38 +8,30 @@ Ativa
 
 ## Contexto
 
-A aplicação tem cinco telas distintas (Dashboard, Formulário, Tabela de Dados, Fluxo de Cadastro e Componente Composto) que precisam de navegação independente. Precisamos decidir como implementar o roteamento client-side de uma SPA React.
+A aplicação é uma SPA React cujas telas precisam de navegação independente. Precisamos decidir como implementar o roteamento client-side.
 
 Forças em jogo:
 
 - O usuário deve poder navegar diretamente para qualquer tela via URL (deep linking e recarregamento de página devem funcionar)
 - A navegação precisa ser refletida na barra de endereço do navegador para que os botões Voltar/Avançar funcionem naturalmente
-- O `AppLayout` (Navbar) precisa saber a rota ativa para destacar a aba correta
-- As telas são scaffolds por enquanto — o roteamento deve escalar quando cada tela ganhar subrotas ou parâmetros
+- Quando o `AppLayout` expuser itens de navegação, ele precisa saber a rota ativa para destacar o item correspondente
+- O roteamento deve escalar quando as telas ganharem subrotas ou parâmetros
 
 ## Decisão
 
-Vamos usar **React Router DOM v7** com `BrowserRouter` e a API declarativa de `Routes`/`Route`. O `BrowserRouter` é instanciado em `App.tsx`, que também declara todas as rotas. O `AppLayout` usa `useLocation` para detectar a rota ativa e `useNavigate` para navegar programaticamente.
+Vamos usar **React Router DOM v7** com `BrowserRouter` e a API declarativa de `Routes`/`Route`. O `BrowserRouter` é instanciado em `App.tsx`, que também declara todas as rotas. Quando o `AppLayout` expuser itens de navegação, ele usa `useLocation` para detectar a rota ativa e `useNavigate` para navegar programaticamente.
 
-Estrutura de rotas:
-
-| URL | Tela |
-|-----|------|
-| `/` | Dashboard |
-| `/projetos` | Tabela de Dados |
-| `/cadastro` | Formulário |
-| `/onboarding` | Fluxo de Cadastro |
-| `/componentes` | Componente Composto |
+Esta ADR fixa o **mecanismo** de roteamento, não o conjunto de rotas. As rotas concretas são declaradas em `App.tsx` à medida que cada tela é implementada, seguindo a convenção de URL em kebab-case.
 
 ## Alternativas Consideradas
 
 ### Alternativa 1: Roteamento manual com estado local (`useState`)
 
-**Descrição**: Um `useState` em `App.tsx` controla qual tela está ativa; a Navbar chama `setScreen`.
+**Descrição**: Um `useState` em `App.tsx` controla qual tela está ativa; a navegação chama `setScreen`.
 
 **Prós**:
 - Zero dependência adicional
-- Implementação trivial para cinco telas fixas
+- Implementação trivial para um conjunto pequeno de telas fixas
 
 **Contras**:
 - URLs não refletem a tela atual — recarregar a página sempre vai para a Home
@@ -51,14 +43,14 @@ Estrutura de rotas:
 
 ### Alternativa 2: Hash Router (`HashRouter`)
 
-**Descrição**: Usa `#/projetos` em vez de `/projetos` na URL.
+**Descrição**: Usa `#/rota` em vez de `/rota` na URL.
 
 **Prós**:
 - Funciona sem configuração de servidor (sem necessidade de reescrever todas as rotas para `index.html`)
 - Suportado pelo Vite dev server sem configuração extra
 
 **Contras**:
-- URLs feias (`/#/projetos` em vez de `/projetos`)
+- URLs feias (`/#/rota` em vez de `/rota`)
 - SEO prejudicado (crawlers ignoram o fragmento de hash)
 - Padrão que a comunidade React abandonou em favor de `BrowserRouter` + configuração de servidor
 
@@ -101,42 +93,44 @@ Estrutura de rotas:
 ## Notas de Implementação
 
 ```tsx
-// App.tsx
+// App.tsx — composition root: container de DI + declaração de rotas
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() {
   return (
     <BrowserRouter>
-      <AppLayout>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/projetos" element={<DataTableScreen />} />
-          {/* ... */}
-        </Routes>
-      </AppLayout>
+      <ContainerProvider container={container}>
+        <AppLayout>
+          <Routes>
+            {/* um <Route path="..." element={<Tela />} /> por tela implementada */}
+          </Routes>
+        </AppLayout>
+      </ContainerProvider>
     </BrowserRouter>
   )
 }
 ```
 
 ```tsx
-// AppLayout.tsx — detecta rota ativa
+// AppLayout.tsx — quando houver itens de navegação, detectar a rota ativa
 import { useLocation, useNavigate } from 'react-router-dom'
 
 const { pathname } = useLocation()
 const navigate = useNavigate()
 
-<NavbarTab active={pathname === '/projetos'} onClick={() => navigate('/projetos')} />
+<NavbarTab active={pathname === rota} onClick={() => navigate(rota)} />
 ```
 
 ## Validação
 
 A decisão é bem-sucedida se:
 
-- Recarregar a página em `/projetos` renderiza a tela correta (sem redirecionar para a Home)
+- Recarregar a página em qualquer rota renderiza a tela correta (sem redirecionar para a Home)
 - Os botões Voltar/Avançar do browser navegam entre telas
-- A aba ativa na Navbar corresponde sempre à URL atual
+- O item de navegação ativo corresponde sempre à URL atual
 
 ## Revisão
 
-**2026-09-09**: Decisão inicial. Cinco rotas estáticas implementadas. Sem subrotas ou parâmetros dinâmicos por enquanto.
+**2026-09-09**: Decisão inicial.
+
+**2026-09-13**: Removida a tabela de rotas concretas. Nenhuma tela está implementada e o `<Routes>` em `App.tsx` está vazio — a ADR passa a documentar apenas o mecanismo de roteamento, e as rotas entram conforme cada tela for construída. O `AppLayout` atual monta o `AppHeader` do `@ds/core` e ainda não expõe itens de navegação, portanto não usa `useLocation`/`useNavigate`.

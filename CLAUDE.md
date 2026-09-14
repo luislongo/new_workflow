@@ -47,7 +47,7 @@ npm run lint           # oxlint
 npm run figma:connect  # publica Code Connect no Figma
 ```
 
-O design system (`@ds/core`) precisa estar buildado antes: `cd ../design_system && npm run build`.
+O design system (`@ds/core`) precisa estar buildado antes: `cd ../mba/repos/design_system && npm run build`.
 
 ## Sessão Ativa
 

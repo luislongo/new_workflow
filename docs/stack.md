@@ -11,6 +11,10 @@
 |-----------|--------|-----------|
 | React | ^19 | Biblioteca de UI |
 | React Router DOM | ^7 | Roteamento client-side (SPA) |
+| React Hook Form | ^7.88 | Estado de formulário (ver [ADR-0002](../meta/adr/0002-formularios-e-validacao.md)) |
+| Zod | ^3.25 | Schema e validação |
+| @hookform/resolvers | ^5.9 | Ponte entre React Hook Form e Zod |
+| @faker-js/faker | ^9.9 | Geração dos dados de `src/mocks/` |
 | @ds/core | 0.0.1 (local) | Design system interno |
 
 ## Build
@@ -34,10 +38,10 @@ SPA puro servido pelo Vite. Sem backend, sem SSR, sem API própria.
 
 ```
 Camadas:
-1. Design System (@ds/core)     — componentes atômicos + tokens
-2. AppLayout (src/components/)  — estrutura de página e navegação global
-3. Telas (src/screens/)         — páginas da aplicação, uma pasta por tela
-4. Roteador (App.tsx)           — BrowserRouter + Routes declarativo
+1. Design System (@ds/core)                  — componentes atômicos + tokens
+2. AppLayout (presentation/components/)      — estrutura de página e navegação global
+3. Telas (presentation/screens/)             — páginas da aplicação, uma pasta por tela
+4. App.tsx                                   — composition root: container de DI + Routes
 ```
 
-O design system é compilado separadamente e consumido via `file:` link no package.json. O CSS do design system é importado em `main.tsx` via `@ds/core/style.css`.
+O design system é compilado separadamente e consumido via `file:../mba/repos/design_system` no package.json. O CSS do design system é importado em `main.tsx` via `@ds/core/style.css`.

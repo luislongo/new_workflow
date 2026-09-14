@@ -27,4 +27,4 @@ Esta é a **primeira tela real** da aplicação e o **primeiro uso completo** da
 
 ## Próximo passo
 
-Execute `/plan adicionar-empreendimento` em nova janela de chat.
+Execute `/work adicionar-empreendimento` em nova janela de chat.

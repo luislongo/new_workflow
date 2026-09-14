@@ -40,7 +40,7 @@ src/
 │   ├── context/
 │   │   └── ContainerContext.tsx              # ContainerProvider + useContainer
 │   ├── components/
-│   │   └── AppLayout/                        # layout global (AppHeader do @ds/core)
+│   │   └── AppLayout/                        # layout global
 │   └── screens/                              # uma pasta por tela, criada conforme implementada
 └── mocks/                                    # dados de demonstração — fora das camadas
     ├── types.ts
@@ -111,14 +111,13 @@ Quando uma tela deixar de ser protótipo visual, o mock vira a fonte de uma impl
 | Categoria | Local | Responsabilidade |
 |-----------|-------|-----------------|
 | Layout | `presentation/components/` | Estrutura de página, sem lógica de domínio |
-| Tela | `presentation/screens/` | Stateful, compõe componentes do design system |
-| Design System | `@ds/core` | Atômicos, sem margem emitida, API props-only |
+| Tela | `presentation/screens/` | Stateful, compõe componentes de UI |
 
 ## Estilos
 
-As telas usam **Tailwind CSS v4** com tokens derivados do design system. Tokens disponíveis: `color-primary-*`, `color-neutral-*`, `color-danger-*`, `color-light-*`, `spacing-*`, `radius-*`, `text-*`, `font-sans`. Ver `src/index.css` para a lista completa.
+As telas usam **Tailwind CSS v4**. Tokens disponíveis: `color-primary-*`, `color-neutral-*`, `color-danger-*`, `color-light-*`, `spacing-*`, `radius-*`, `text-*`, `font-sans`. Ver `src/index.css` para a lista completa.
 
-## Code Connect (new_workflow exclusivo)
+## Code Connect
 
 Arquivos `.figma.tsx` ao lado de cada componente mapeiam o React ao nó Figma correspondente. Isso permite inspecionar um componente no Figma e ver diretamente a implementação em código.
 

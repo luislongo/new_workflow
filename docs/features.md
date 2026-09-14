@@ -2,7 +2,7 @@
 
 ## Telas da Aplicação
 
-A aplicação é um sistema de **gestão de projetos** com cinco telas. As telas são idênticas em `old_workflow` e `new_workflow` — o diferencial é o workflow de implementação, não o produto.
+A aplicação é um sistema de **gestão de projetos** com cinco telas.
 
 ### Dashboard (`/`)
 
@@ -28,11 +28,11 @@ A aplicação é um sistema de **gestão de projetos** com cinco telas. As telas
 | Reutilização | Alta |
 | Interatividade | Média |
 
-**Descrição**: Formulário para criação e edição de projetos, usando componentes de input do design system.
+**Descrição**: Formulário para criação e edição de projetos.
 
 **Campos previstos**: Nome, Cliente, Data de Início, Data de Término, Orçamento, Gerente, Descrição.
 
-**Manutenção planejada**: Adicionar um campo obrigatório utilizando componente do design system (ex.: `Select` para categoria).
+**Manutenção planejada**: Adicionar um campo obrigatório de categoria (ex.: `Select` para categoria).
 
 ---
 
@@ -88,7 +88,7 @@ A aplicação é um sistema de **gestão de projetos** com cinco telas. As telas
 
 ### AppLayout
 
-Barra de navegação global usando `Navbar` e `NavbarTab` do `@ds/core`. Destaca a aba ativa via `useLocation`. Envolve todas as telas.
+Barra de navegação global. Destaca a aba ativa via `useLocation`. Envolve todas as telas.
 
 ### Roteamento
 

@@ -14,9 +14,8 @@ A pergunta central: qual nível de estrutura é adequado para uma aplicação de
 
 Forças em jogo:
 
-- As telas serão implementadas duas vezes (em `old_workflow` e `new_workflow`) e depois sofrerão manutenção — o código precisa ser legível e modificável por qualquer desenvolvedor sem contexto prévio
+- As telas sofrerão manutenção após implementação inicial — o código precisa ser legível e modificável sem contexto prévio
 - As telas compartilham a mesma entidade (`Project`) e as mesmas operações CRUD — há um domínio real, mesmo que simples
-- A pesquisa compara workflows — e a qualidade arquitetural é uma dimensão relevante do resultado, não um ruído a ser eliminado
 - O custo real de Clean Architecture para uma aplicação com uma entidade é baixo: quatro use cases, um repositório em memória, uma interface de container
 
 ## Decisão
@@ -85,13 +84,13 @@ src/presentation/
 ├── context/
 │   └── ContainerContext.tsx          # ContainerProvider + useContainer hook
 ├── components/
-│   └── AppLayout/                    # layout global, monta o AppHeader do @ds/core
+│   └── AppLayout/                    # layout global
 └── screens/                          # uma pasta por tela, criada conforme a tela é implementada
 ```
 
 Telas acessam use cases via `useContainer()` — nunca instanciam repositórios ou serviços diretamente.
 
-`AppLayout` é o único componente em `presentation/components/`. Não existe `src/components/` fora da camada de apresentação — componentes de layout moram em `presentation/components/`, atômicos moram no `@ds/core`.
+`AppLayout` é o único componente em `presentation/components/`. Não existe `src/components/` fora da camada de apresentação — componentes de layout moram em `presentation/components/`.
 
 ### Exceção: `src/mocks/`
 

@@ -70,7 +70,7 @@ Esta ADR fixa o **mecanismo** de roteamento, não o conjunto de rotas. As rotas 
 - API mais verbosa para casos simples (cinco rotas estáticas)
 - Dependência menos ubíqua — documentação, exemplos e suporte da comunidade são menores que React Router
 
-**Razão para rejeição**: Os benefícios de type safety e file-based routing não justificam o overhead para cinco rotas estáticas. React Router é suficiente e familiar para o contexto da pesquisa.
+**Razão para rejeição**: Os benefícios de type safety e file-based routing não justificam o overhead para cinco rotas estáticas. React Router é suficiente para este porte.
 
 ## Consequências
 
@@ -83,7 +83,6 @@ Esta ADR fixa o **mecanismo** de roteamento, não o conjunto de rotas. As rotas 
 
 ### Negativas
 
-- Dependência adicional (`react-router-dom`) que não existe no `old_workflow`
 - O Vite dev server precisa servir `index.html` para todas as rotas — comportamento padrão já satisfaz isso, mas o deploy de produção precisará de configuração equivalente (ex.: `nginx try_files`)
 
 ### Neutras
@@ -133,4 +132,4 @@ A decisão é bem-sucedida se:
 
 **2026-09-09**: Decisão inicial.
 
-**2026-09-13**: Removida a tabela de rotas concretas. Nenhuma tela está implementada e o `<Routes>` em `App.tsx` está vazio — a ADR passa a documentar apenas o mecanismo de roteamento, e as rotas entram conforme cada tela for construída. O `AppLayout` atual monta o `AppHeader` do `@ds/core` e ainda não expõe itens de navegação, portanto não usa `useLocation`/`useNavigate`.
+**2026-09-13**: Removida a tabela de rotas concretas. Nenhuma tela está implementada e o `<Routes>` em `App.tsx` está vazio — a ADR passa a documentar apenas o mecanismo de roteamento, e as rotas entram conforme cada tela for construída. O `AppLayout` atual ainda não expõe itens de navegação, portanto não usa `useLocation`/`useNavigate`.

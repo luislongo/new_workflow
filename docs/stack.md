@@ -15,7 +15,6 @@
 | Zod | ^3.25 | Schema e validação |
 | @hookform/resolvers | ^5.9 | Ponte entre React Hook Form e Zod |
 | @faker-js/faker | ^9.9 | Geração dos dados de `src/mocks/` |
-| @ds/core | 0.0.1 (local) | Design system interno |
 
 ## Build
 
@@ -26,11 +25,10 @@
 - **oxlint** — linting rápido
 - **TypeScript strict** — único gate automatizado de build; não há ESLint, Prettier nem test runner configurados nesta fase
 
-## Figma Code Connect (new_workflow exclusivo)
+## Figma Code Connect
 
 - **@figma/code-connect ^1.5.3** — mapeia componentes React a nós Figma
 - `figma.config.json` na raiz — inclui `src/**/*.tsx`
-- Scripts: `figma:connect`, `figma:connect:dry-run`, `figma:connect:unpublish`
 
 ## Arquitetura Geral
 
@@ -38,10 +36,7 @@ SPA puro servido pelo Vite. Sem backend, sem SSR, sem API própria.
 
 ```
 Camadas:
-1. Design System (@ds/core)                  — componentes atômicos + tokens
-2. AppLayout (presentation/components/)      — estrutura de página e navegação global
-3. Telas (presentation/screens/)             — páginas da aplicação, uma pasta por tela
-4. App.tsx                                   — composition root: container de DI + Routes
+1. AppLayout (presentation/components/)      — estrutura de página e navegação global
+2. Telas (presentation/screens/)             — páginas da aplicação, uma pasta por tela
+3. App.tsx                                   — composition root: container de DI + Routes
 ```
-
-O design system é compilado separadamente e consumido via `file:../mba/repos/design_system` no package.json. O CSS do design system é importado em `main.tsx` via `@ds/core/style.css`.

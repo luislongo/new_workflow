@@ -14,9 +14,8 @@ Forças em jogo:
 
 - Formulários React não controlados (uncontrolled) são difíceis de validar de forma declarativa
 - O wizard precisa de validação por etapa — só avança quando a etapa atual é válida
-- Os componentes de input são do `@ds/core` (`Textbox`, `Select`, `FormGroup`) — a solução de formulário precisa ser compatível com componentes customizados
-- A solução não deve introduzir dependências que conflitem com a restrição de zero runtime deps do design system (o design system tem essa restrição; a aplicação não)
-- A pesquisa vai medir o esforço de implementação — a solução deve ser representativa de como times profissionais trabalham em 2026
+- Os componentes de input (`Textbox`, `Select`, `FormGroup`) são customizados — a solução de formulário precisa ser compatível com componentes que usam `forwardRef`
+- A solução deve ser representativa de como times profissionais trabalham em 2026
 
 ## Decisão
 
@@ -26,7 +25,7 @@ Vamos usar **React Hook Form** para gerenciamento de estado de formulário e **Z
 - `zod` define o schema de validação como TypeScript — o mesmo schema serve para type inference e validação em runtime
 - A integração é feita via `@hookform/resolvers/zod`
 
-O `FormGroup` do design system envolve campo + label + mensagem de erro — o campo interno recebe `ref` do `register()` via `forwardRef`.
+O `FormGroup` envolve campo + label + mensagem de erro — o campo interno recebe `ref` do `register()` via `forwardRef`.
 
 **As dependências já estão instaladas; a implementação efetiva acontece quando cada tela for construída.**
 
@@ -91,7 +90,7 @@ O `FormGroup` do design system envolve campo + label + mensagem de erro — o ca
 ### Negativas
 
 - Três dependências de runtime a mais: `react-hook-form`, `zod` e `@hookform/resolvers`
-- Os componentes do `@ds/core` precisam suportar `forwardRef` para integração com `register()` — a maioria já suporta; verificar antes de usar
+- Os componentes de input precisam suportar `forwardRef` para integração com `register()` — verificar antes de usar
 
 ### Neutras
 

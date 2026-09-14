@@ -5,9 +5,7 @@ interface AppLayoutProps {
   children: ReactNode;
 }
 
-const Avatar = () => (
-  <div className="w-12 h-12 rounded-full bg-neutral-300" />
-);
+const Avatar = () => <div className="w-12 h-12 rounded-full bg-neutral-300" />;
 
 export function AppLayout({ children }: AppLayoutProps) {
   return (

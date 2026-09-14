@@ -1,8 +1,6 @@
 # ADRs — new_workflow
 
-Registro de decisões arquiteturais do projeto `new_workflow`. Cada ADR documenta uma decisão de design significativa: o contexto em que foi tomada, as alternativas consideradas e as consequências esperadas.
-
-Estas ADRs existem apenas no `new_workflow` — fazem parte do diferencial de workflow estudado na pesquisa de MBA.
+Registro de decisões arquiteturais do projeto. Cada ADR documenta uma decisão de design significativa: o contexto em que foi tomada, as alternativas consideradas e as consequências esperadas.
 
 ## Índice
 
@@ -11,6 +9,7 @@ Estas ADRs existem apenas no `new_workflow` — fazem parte do diferencial de wo
 | [0001](0001-roteamento-com-react-router.md) | Roteamento com React Router DOM | Ativa | Navegação |
 | [0002](0002-formularios-e-validacao.md) | Formulários e validação | Ativa | Dados |
 | [0003](0003-principios-solid-e-arquitetura-limpa.md) | Arquitetura Limpa Completa | Ativa | Arquitetura |
+| [0004](0004-design-system.md) | Design System | Ativa | UI |
 
 ## Grafo de dependências
 

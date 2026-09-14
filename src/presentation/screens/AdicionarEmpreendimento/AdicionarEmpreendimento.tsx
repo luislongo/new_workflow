@@ -49,7 +49,7 @@ export function AdicionarEmpreendimento() {
   }
 
   const textFields = (
-    <div className="flex flex-col gap-[10px]">
+    <div className="flex flex-col gap-[10px] w-full">
       <FormGroup
         label="Nome do empreendimento"
         placeholder="Ex.: Residencial Vista Verde"
@@ -62,11 +62,7 @@ export function AdicionarEmpreendimento() {
         error={errors.email?.message}
         {...register("email")}
       />
-      <FormGroup
-        label="CEP"
-        placeholder="00000-000"
-        {...register("cep")}
-      />
+      <FormGroup label="CEP" placeholder="00000-000" {...register("cep")} />
       <FormGroup
         label="Endereço"
         placeholder="Rua, número, bairro"
@@ -87,7 +83,10 @@ export function AdicionarEmpreendimento() {
           Tipo de empreendimento
         </legend>
         {TIPOS.map((tipo) => (
-          <label key={tipo} className="flex items-center gap-[8px] cursor-pointer">
+          <label
+            key={tipo}
+            className="flex items-center gap-[8px] cursor-pointer"
+          >
             <Radio value={tipo} {...register("tipo")} />
             {tipo}
           </label>
@@ -97,7 +96,11 @@ export function AdicionarEmpreendimento() {
   );
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-[10px]">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
+      className="flex flex-col gap-[10px]"
+    >
       <div className="flex flex-col gap-[4px]">
         <H1>Adicionar empreendimento vazio</H1>
         <Description>

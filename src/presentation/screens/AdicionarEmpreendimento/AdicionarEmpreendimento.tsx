@@ -42,7 +42,7 @@ export function AdicionarEmpreendimento() {
   }
 
   const textFields = (
-    <div className="flex flex-col gap-[10px] w-full">
+    <div className="flex flex-col gap-[10px] w-full p-2.5">
       <FormGroup
         label="Nome do empreendimento"
         placeholder="Ex.: Residencial Vista Verde"
@@ -70,10 +70,10 @@ export function AdicionarEmpreendimento() {
   );
 
   const radioGroup = (
-    <FormGroup error={errors.tipo?.message}>
-      <fieldset className="flex flex-col gap-200 min-w-0">
+    <FormGroup error={errors.tipo?.message} className="w-full p-2.5">
+      <fieldset className="flex flex-col gap-250 min-w-0 p-2.5">
         <legend
-          className={`font-sans text-xs leading-none mb-200 ${
+          className={`font-sans text-xs mb-200 ${
             errors.tipo ? "text-danger-500" : "text-neutral-600"
           }`}
         >
@@ -82,7 +82,7 @@ export function AdicionarEmpreendimento() {
         {TIPOS.map((tipo) => (
           <label
             key={tipo}
-            className="flex items-center gap-200 cursor-pointer"
+            className="flex items-center gap-250 cursor-pointer text-xs text-neutral-600"
           >
             <Radio {...register("tipo")} value={tipo} />
             {tipo}
@@ -96,11 +96,11 @@ export function AdicionarEmpreendimento() {
     <form
       onSubmit={handleSubmit(onSubmit)}
       noValidate
-      className="flex flex-col gap-[10px]"
+      className="flex flex-col gap-[10px] max-w-[800px] px-3 mx-auto pt-1200 pb-300 lg:px-0 lg:pb-0"
     >
-      <div className="flex flex-col gap-100">
+      <div className="flex flex-col gap-2.5">
         <H1>Adicionar empreendimento vazio</H1>
-        <Description>
+        <Description className="w-[400px]">
           Preencha as informações necessárias para cadastrar o empreendimento
         </Description>
       </div>

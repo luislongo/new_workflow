@@ -26,8 +26,14 @@ Você está trabalhando na feature **Relatórios** — tela `/relatorios` com ab
 
 ## Decisões do `/plan`
 
-_A preencher._
+1. **Índice original via enumerar-antes-de-filtrar**: `execute(filtro)` faz `map((o, i) => ({ indice: i+1, o }))` antes do `filter`, preservando o índice da lista completa (RN-004). O use case retorna `Array<{ indice: number; obra: Obra }>` em vez de só `Obra[]`.
+2. **Deps primitivas no `useEffect`**: `[getRelatorioObras, dataInicio, dataFim, busca]` — nunca o objeto `filtro` diretamente, que seria novo a cada render e causaria loop infinito.
+3. **`ExportarRelatorio.execute` síncrono**: monta CSV puro (sem I/O assíncrono) e chama `IArquivoDownloader.baixar` de forma síncrona.
+4. **Funções de formatação fora do componente**: `formatOrcamento`, `formatValor`, `formatData` são definidas no escopo do módulo (ou em arquivo irmão `relatorios.utils.ts`) para serem compartilhadas entre a tabela e o CSV.
+5. **Layout responsivo com toolbar condicional**: ao contrário do Dashboard (dois returns completos), a tela usa um único return com JSX da toolbar condicional por `isDesktop` — a estrutura de tabelas é idêntica nos dois breakpoints; só a toolbar reorganiza.
+6. **Validação de data**: se `dataInicio > dataFim`, ignorar a mudança de estado que tornaria o intervalo inválido; não disparar o filtro nesse caso.
+7. **Sequência de fases**: FASE 1 → FASE 2 (deps) → FASE 3 (deps) → FASE 4 (deps) → FASE 5 (deps) → FASE 6 (deps) → FASE 7 (paralela). FASE 2 e FASE 3 podem ser feitas em paralelo pois não compartilham arquivos.
 
 ## Próximo passo
 
-Execute `/plan relatorios` em nova janela de chat.
+Execute `/work relatorios` em nova janela de chat.

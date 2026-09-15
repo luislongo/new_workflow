@@ -18,30 +18,31 @@ Veja [ADR-0003](../meta/adr/0003-principios-solid-e-arquitetura-limpa.md) para a
 src/
 ├── App.tsx                                   # composition root: instancia container e define rotas
 ├── domain/                                   # entidades e contratos (sem dependências externas)
-│   ├── Project.ts
+│   ├── Empreendimento.ts
 │   ├── repositories/
-│   │   └── IProjectRepository.ts
+│   │   └── IEmpreendimentoRepository.ts
 │   └── index.ts
 ├── application/                              # use cases e interface do container
 │   ├── IContainer.ts
 │   ├── usecases/
-│   │   ├── GetProjects.ts
-│   │   ├── CreateProject.ts
-│   │   ├── UpdateProject.ts
-│   │   ├── DeleteProject.ts
+│   │   ├── CreateEmpreendimento.ts
 │   │   └── index.ts
 │   └── index.ts
 ├── infrastructure/                           # implementações concretas
 │   ├── repositories/
-│   │   └── InMemoryProjectRepository.ts
+│   │   ├── InMemoryEmpreendimentoRepository.ts
+│   │   └── index.ts
 │   ├── container.ts
 │   └── index.ts
 ├── presentation/                             # componentes React
 │   ├── context/
 │   │   └── ContainerContext.tsx              # ContainerProvider + useContainer
 │   ├── components/
-│   │   └── AppLayout/                        # layout global
+│   │   └── AppLayout/                        # layout global (AppHeader + Navbar)
+│   ├── hooks/                                # hooks reutilizáveis por telas e pelo AppLayout
+│   │   └── useMediaQuery.ts
 │   └── screens/                              # uma pasta por tela, criada conforme implementada
+│       └── AdicionarEmpreendimento/
 └── mocks/                                    # dados de demonstração — fora das camadas
     ├── types.ts
     ├── dashboard.ts
@@ -50,13 +51,14 @@ src/
     └── index.ts
 ```
 
-`presentation/screens/` e as telas ainda não existem — cada uma é criada quando for implementada.
+`presentation/screens/` ganha uma pasta por tela conforme ela é implementada — `AdicionarEmpreendimento/` é a primeira.
 
 Cada módulo de tela segue:
 ```
 NomeTela/
-├── NomeTela.tsx    # componente principal, exportado nomeado
-└── index.ts        # re-export: export { NomeTela } from './NomeTela'
+├── NomeTela.tsx        # componente principal, exportado nomeado
+├── NomeTela.schema.ts  # schema Zod + tipo inferido (apenas telas com formulário)
+└── index.ts            # re-export: export { NomeTela } from './NomeTela'
 ```
 
 ## Regras de Importação
@@ -67,10 +69,12 @@ NomeTela/
 | `application` | `domain` |
 | `infrastructure` | `domain`, `application` |
 | `presentation` | `application` (interfaces, use cases) e, temporariamente, `mocks` |
-| `mocks` | Nenhuma camada do projeto |
+| `mocks` | `domain` (apenas re-export de tipos — ver nota abaixo) |
 | `App.tsx` | Todas as camadas (composition root) |
 
 **Proibido**: `presentation` importar de `infrastructure` diretamente.
+
+> **Nota sobre `mocks → domain`:** `src/mocks/types.ts` reexporta tipos de `domain/Empreendimento.ts` em vez de redeclará-los. A direção é permitida — `domain` é a camada mais interna e não importa de `mocks`. Esse padrão é válido apenas para re-export de tipos; `mocks/` nunca instancia, constrói ou depende de lógica de `domain`.
 
 ## Acesso a Use Cases nas Telas
 
@@ -80,10 +84,40 @@ Telas acessam use cases via `useContainer()` — nunca instanciam repositórios 
 import { useContainer } from '../../context/ContainerContext'
 
 export function MinhaTela() {
-  const { getProjects } = useContainer()
+  const { createEmpreendimento } = useContainer()
   // ...
 }
 ```
+
+## Convenção de Use Cases
+
+Cada use case expõe um único método público `execute()` — convenção adotada a partir da primeira use case do projeto (`CreateEmpreendimento`) e válida para as próximas:
+
+```ts
+export class CreateEmpreendimento {
+  private readonly repository: IEmpreendimentoRepository;
+
+  constructor(repository: IEmpreendimentoRepository) {
+    this.repository = repository;
+  }
+
+  async execute(input: CreateEmpreendimentoInput): Promise<Empreendimento> {
+    return this.repository.create(input);
+  }
+}
+```
+
+Chamada a partir da tela: `await createEmpreendimento.execute(input)`.
+
+## TypeScript: `erasableSyntaxOnly`
+
+`tsconfig.app.json` habilita `erasableSyntaxOnly`, que **proíbe parameter properties** (`constructor(private readonly x: T)`). Toda classe do projeto (use cases, repositórios) declara o campo e o atribui explicitamente no construtor, como no exemplo acima — nunca como atalho no parâmetro. `verbatimModuleSyntax: true` também exige `import type { ... }` para imports usados só como tipo, e `noUnusedLocals`/`noUnusedParameters` quebram o build com variáveis não usadas.
+
+## Hooks
+
+`presentation/hooks/` reúne hooks reutilizáveis por telas e pelo `AppLayout`. O design system não exporta hooks — responsividade é implementada localmente no projeto.
+
+`useMediaQuery(query: string): boolean` usa `window.matchMedia` + `useSyncExternalStore` (evita flash de layout incorreto na hidratação; snapshot de servidor retorna `false`). O projeto usa um único breakpoint — `(min-width: 1024px)` — como fonte de verdade para "desktop" vs. "mobile"; todo componente responsivo (`AppHeader`, `NavbarTab`, `DoubleColumn`, ...) consome o mesmo valor derivado dessa única chamada, feita uma vez por componente que precisa dele.
 
 ## Dados de Mock
 
@@ -100,8 +134,8 @@ As funções são `async` e retornam o array já materializado — a assinatura 
 
 Três ressalvas:
 
-1. **Não passa pelo container.** Os mocks não implementam `IProjectRepository` e não são injetados via `useContainer()`.
-2. **O vocabulário não é o do domínio.** `Empreendimento`, `Obra` e `LancamentoFinanceiro` são de construção civil; a entidade de `domain/` é `Project`. Os dois conjuntos ainda não foram reconciliados.
+1. **Não passa pelo container.** `fetchEmpreendimentos()` não implementa `IEmpreendimentoRepository` e não é injetado via `useContainer()` — é dado de protótipo visual, independente do `InMemoryEmpreendimentoRepository` real usado pela tela `AdicionarEmpreendimento`.
+2. **Vocabulário parcialmente reconciliado.** `mocks/types.ts` reexporta `TipoEmpreendimento`, `Empreendimento` e `CreateEmpreendimentoInput` de `domain/Empreendimento.ts` — fonte única de verdade para essas telas. `Obra` e `LancamentoFinanceiro` (usados por `relatorios.ts`) ainda são vocabulário exclusivo de mock, sem entidade correspondente em `domain/` até que a tela de Relatórios seja implementada.
 3. **`@faker-js/faker` é uma dependência de runtime**, não de desenvolvimento — enquanto os mocks forem importados por código de tela, o faker entra no bundle de produção.
 
 Quando uma tela deixar de ser protótipo visual, o mock vira a fonte de uma implementação de repositório em `infrastructure/` e a tela passa a consumir o use case. Ver [ADR-0003](../meta/adr/0003-principios-solid-e-arquitetura-limpa.md).

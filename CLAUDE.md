@@ -1,6 +1,6 @@
 # new_workflow
 
-Aplicação React de **gestão de projetos** com cinco telas. Utiliza documentação estruturada (este CLAUDE.md, docs/, ADRs) e Figma Code Connect.
+Aplicação React de **gestão de empreendimentos** (construção civil). Utiliza documentação estruturada (este CLAUDE.md, docs/, ADRs) e Figma Code Connect.
 
 ## Documentação do Projeto
 
@@ -31,11 +31,16 @@ Leia os ADRs em `meta/adr/` antes de propor mudanças de stack, arquitetura ou p
 
 ```
 src/presentation/screens/<NomeTela>/
-├── <NomeTela>.tsx     # componente principal da tela
-└── index.ts           # re-export público
+├── <NomeTela>.tsx        # componente principal da tela
+├── <NomeTela>.schema.ts  # schema Zod + tipo inferido (apenas telas com formulário)
+└── index.ts              # re-export público
 ```
 
 Telas acessam dados via `useContainer()` de `presentation/context/ContainerContext`. Nunca importar de `infrastructure/` dentro de `presentation/`.
+
+**Use cases**
+
+Cada use case expõe um único método `execute()` (convenção do projeto desde `CreateEmpreendimento`). Detalhes e exemplo em `docs/patterns.md`.
 
 **Comandos**
 

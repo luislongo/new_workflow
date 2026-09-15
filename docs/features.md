@@ -2,85 +2,25 @@
 
 ## Telas da Aplicação
 
-A aplicação é um sistema de **gestão de projetos** com cinco telas.
+A aplicação é um sistema de **gestão de empreendimentos** (projetos imobiliários / construção civil).
 
-### Dashboard (`/`)
-
-| Atributo | Valor |
-|---------|-------|
-| Complexidade | Alta |
-| Reutilização | Alta |
-| Interatividade | Média |
-
-**Descrição**: Visão geral do portfólio com indicadores-chave (KPIs) e gráficos de evolução e distribuição por status.
-
-**KPIs exibidos**: Projetos Ativos, No Prazo, Orçamento Utilizado (%), Membros da Equipe.
-
-**Manutenção planejada**: Adicionar filtro de período que atualize todos os indicadores conforme o intervalo selecionado.
-
----
-
-### Formulário — Cadastro de Projeto (`/cadastro`)
-
-| Atributo | Valor |
-|---------|-------|
-| Complexidade | Baixa |
-| Reutilização | Alta |
-| Interatividade | Média |
-
-**Descrição**: Formulário para criação e edição de projetos.
-
-**Campos previstos**: Nome, Cliente, Data de Início, Data de Término, Orçamento, Gerente, Descrição.
-
-**Manutenção planejada**: Adicionar um campo obrigatório de categoria (ex.: `Select` para categoria).
-
----
-
-### Tabela de Dados — Lista de Projetos (`/projetos`)
+### Adicionar Empreendimento (`/empreendimento`)
 
 | Atributo | Valor |
 |---------|-------|
 | Complexidade | Média |
 | Reutilização | Alta |
-| Interatividade | Alta |
+| Interatividade | Média |
 
-**Descrição**: Listagem tabular de todos os projetos cadastrados com colunas de dados e ações.
+**Descrição**: Formulário para cadastro de um novo empreendimento. O usuário preenche os dados básicos e confirma — o sistema exibe `alert("Empreendimento cadastrado com sucesso!")` e reseta o formulário.
 
-**Colunas**: #, Nome, Cliente, Status, Início, Término, Orçamento, Ações.
+**Campos**: Nome do empreendimento, Endereço de e-mail, CEP, Endereço, Proprietário, Tipo de empreendimento (radio: Residencial · Comercial · Infraestrutura).
 
-**Manutenção planejada**: Adicionar ordenação a uma coluna existente (clique no cabeçalho).
+**Campos obrigatórios**: Nome e E-mail. Tipo é obrigatório (sem seleção bloqueia o submit). CEP, Endereço e Proprietário são opcionais.
 
----
+**Layout responsivo**: Desktop (≥ 1024 px) — DoubleColumn com campos à esquerda e tipo à direita. Mobile (< 1024 px) — coluna única, campos antes, tipo depois. Breakpoint único do projeto — ver `docs/patterns.md`.
 
-### Fluxo de Cadastro — Wizard (`/onboarding`)
-
-| Atributo | Valor |
-|---------|-------|
-| Complexidade | Alta |
-| Reutilização | Média |
-| Interatividade | Alta |
-
-**Descrição**: Wizard multi-etapas para cadastro guiado de novos projetos com stepper visual.
-
-**Etapas atuais**: 1. Informações Básicas → 2. Equipe → 3. Orçamento → 4. Confirmação.
-
-**Manutenção planejada**: Adicionar etapa de Revisão entre Orçamento e Confirmação.
-
----
-
-### Componente Composto — ProjectCard (`/componentes`)
-
-| Atributo | Valor |
-|---------|-------|
-| Complexidade | Média |
-| Reutilização | Alta |
-| Interatividade | Baixa |
-
-**Descrição**: Showcase do componente `ProjectCard` com cards de projetos e toggle de modo compacto.
-
-**Props atuais**: `title`, `client`, `status`, `progress`.
-
-**Manutenção planejada**: Adicionar prop `compact?: boolean` — modo com altura reduzida, sem barra de progresso e tipografia menor.
+**Rota de entrada**: `/` redireciona para `/empreendimento`.
 
 ---
 
@@ -88,8 +28,17 @@ A aplicação é um sistema de **gestão de projetos** com cinco telas.
 
 ### AppLayout
 
-Barra de navegação global. Destaca a aba ativa via `useLocation`. Envolve todas as telas.
+Estrutura de página com `AppHeader` e `Navbar` integrada (via prop `navbar`). A `Navbar` possui 3 abas:
+- **Empreendimento** (`/empreendimento`) — aba ativa nesta tela
+- **Dashboards** — desabilitada (rota não implementada)
+- **Relatórios** — desabilitada (rota não implementada)
+
+A aba ativa é detectada via `useLocation`. Navegação programática via `useNavigate`. Responsividade da navbar: desktop mostra ícone + rótulo; mobile mostra apenas ícone (`NavbarTab size="mobile"`).
 
 ### Roteamento
 
-SPA com React Router DOM. Cada tela tem rota própria (ver [ADR-0001](../meta/adr/0001-roteamento-com-react-router.md)).
+SPA com React Router DOM v7. Rotas declaradas em `App.tsx`:
+- `/` → redirect para `/empreendimento`
+- `/empreendimento` → `<AdicionarEmpreendimento />`
+
+Ver [ADR-0001](../meta/adr/0001-roteamento-com-react-router.md).

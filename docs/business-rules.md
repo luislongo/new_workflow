@@ -2,57 +2,57 @@
 
 > Esta aplicação é um objeto de estudo para pesquisa de MBA. As regras de negócio são simplificadas e servem como cenário realista para as tarefas de implementação — não representam um sistema de produção.
 
-## Domínio: Projetos
+## Domínio: Empreendimentos
 
-### Status válidos
+Um **empreendimento** representa um projeto imobiliário ou de construção civil cadastrado na plataforma.
 
-Um projeto tem exatamente um dos seguintes status:
-- `Planejado` — projeto aprovado, ainda não iniciado
-- `Em andamento` — execução ativa
-- `Pausado` — execução suspensa temporariamente
-- `Concluído` — todas as entregas finalizadas
+### Tipo de empreendimento
+
+Cada empreendimento tem exatamente um dos seguintes tipos:
+
+| Tipo | Descrição |
+|------|-----------|
+| `Residencial` | Edificações habitacionais |
+| `Comercial` | Edificações ou áreas de uso comercial |
+| `Infraestrutura` | Obras de infraestrutura pública ou urbana |
+
+O tipo é mutuamente exclusivo — somente um pode ser selecionado por cadastro.
 
 ### Campos obrigatórios no cadastro
 
-- Nome do projeto
-- Cliente
-- Data de início
-- Gerente responsável
+- **Nome do empreendimento** — não pode ser vazio
+- **Endereço de e-mail** — deve ser um e-mail válido (`z.string().email()`)
+- **Tipo de empreendimento** — um dos três tipos acima deve ser selecionado
 
-### Progresso
+### Campos opcionais
 
-- Valor inteiro entre 0 e 100 (porcentagem)
-- Calculado com base nas entregas concluídas sobre o total
-- Exibido como barra de progresso no `ProjectCard`
-- Um projeto `Concluído` tem progresso = 100
+- CEP — texto livre, sem validação de formato
+- Endereço — texto livre
+- Proprietário — texto livre
 
-## Dashboard — Indicadores
+### Comportamento do submit
 
-| KPI | Cálculo |
-|-----|---------|
-| Projetos Ativos | `count(status = 'Em andamento')` |
-| No Prazo | `count(termino >= hoje AND status != 'Concluído')` |
-| Orçamento Utilizado | `sum(gasto) / sum(orçamento) × 100` |
-| Membros da Equipe | `count(distinct membros em projetos ativos)` |
+- **Submit válido**: salva no repositório em memória via use case `CreateEmpreendimento`; exibe `window.alert("Empreendimento cadastrado com sucesso!")`; ao fechar o alert, o formulário é resetado para o estado inicial.
+- **Submit inválido**: erros inline abaixo de cada campo com problema; formulário permanece preenchido.
 
-O filtro de período (manutenção planejada) deve restringir todos os indicadores ao intervalo de datas selecionado.
+### Comportamento do Cancelar
 
-## Fluxo de Cadastro (Wizard)
+- Reseta o formulário (`reset()` do React Hook Form)
+- Permanece na rota `/empreendimento`
+- Não persiste dados parciais
 
-Sequência de etapas e seus campos obrigatórios:
+### Descarte silencioso
 
-| Etapa | Campos obrigatórios |
-|-------|---------------------|
-| 1. Informações Básicas | Nome, Cliente, Data de início |
-| 2. Equipe | Gerente responsável |
-| 3. Orçamento | Valor total |
-| *(4. Revisão — a adicionar)* | — (leitura) |
-| 4/5. Confirmação | — (submit) |
+Trocar de aba na Navbar com o formulário preenchido descarta os dados sem confirmação.
 
-Regra de navegação: o botão "Próximo" só avança quando os campos obrigatórios da etapa atual estão preenchidos.
+## Persistência
 
-## Tabela de Dados
+O repositório (`InMemoryEmpreendimentoRepository`) nasce vazio a cada sessão — os dados de demonstração em `src/mocks/empreendimentos.ts` são usados apenas por telas de protótipo visual; eles **não passam pelo use case** nem pelo repositório da Clean Architecture.
 
-- Ordenação padrão: por ID crescente
-- Ordenação por coluna (manutenção planejada): alternância asc/desc ao clicar no cabeçalho
-- Não há paginação no scaffold inicial; será adicionada quando o volume de dados demandar
+## Fora de Escopo (v1)
+
+- Listagem de empreendimentos cadastrados
+- Edição ou exclusão de empreendimentos
+- Busca automática por CEP
+- Integração com API real
+- Autenticação / controle de acesso

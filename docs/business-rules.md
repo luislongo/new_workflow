@@ -49,6 +49,30 @@ Trocar de aba na Navbar com o formulário preenchido descarta os dados sem confi
 
 O repositório (`InMemoryEmpreendimentoRepository`) nasce vazio a cada sessão — os dados de demonstração em `src/mocks/empreendimentos.ts` são usados apenas por telas de protótipo visual; eles **não passam pelo use case** nem pelo repositório da Clean Architecture.
 
+## Domínio: Relatórios
+
+### RN-001 — Aba Externo desabilitada
+
+A aba "Externo" é exibida na `TabList` mas permanece desabilitada: não responde a cliques, não recebe foco por teclado e não tem conteúdo. Iteração futura.
+
+### RN-002 — Filtro composto (AND)
+
+Filtro de data e busca textual são aplicados em conjunto (AND lógico). O use case aplica os dois critérios simultaneamente.
+
+### RN-003 — Exportação CSV fiel ao filtro
+
+A exportação gera um arquivo CSV com as mesmas colunas e formatação da tabela ativa, refletindo apenas os dados atualmente filtrados (data + busca) — não o total. Tabela vazia gera CSV com apenas a linha de cabeçalho.
+
+### RN-004 — Numeração `#` mantém índice original
+
+A coluna `#` exibe o índice do registro na lista completa, não na lista filtrada. Com filtro ativo mostrando o 3º e o 7º registros, eles aparecem como `03` e `07` — não são renumerados. O CSV exporta o mesmo número exibido na tabela.
+
+### RN-005 — Percentual concluído
+
+`% Concluído` é um inteiro de 0 a 100 inclusive, exibido com sufixo `%` (ex: `85%`).
+
+---
+
 ## Fora de Escopo (v1)
 
 - Listagem de empreendimentos cadastrados

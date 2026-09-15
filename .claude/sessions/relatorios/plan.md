@@ -28,7 +28,7 @@ Se você está trabalhando nesta funcionalidade, certifique-se de atualizar este
 
 ---
 
-## FASE 1 — Fundação: domain, application, infrastructure [Não Iniciada ⏳]
+## FASE 1 — Fundação: domain, application, infrastructure [Concluída ✅]
 
 Cria a espinha dorsal de dados. Nenhuma UI nesta fase.
 
@@ -193,7 +193,7 @@ export const container: IContainer = {
 
 ---
 
-## FASE 2 — Mocks literais [Não Iniciada ⏳]
+## FASE 2 — Mocks literais [Concluída ✅]
 
 Substitui o faker pelos 10 registros exatos do Figma. Depende da FASE 1 (tipos vêm do domínio).
 
@@ -249,7 +249,7 @@ Mesmo padrão já usado para `Dashboard` e `Empreendimento`.
 
 ---
 
-## FASE 3 — Tela base, rota, navegação e abas [Não Iniciada ⏳]
+## FASE 3 — Tela base, rota, navegação e abas [Concluída ✅]
 
 Primeira fase com resultado visível no browser. Depende das FASES 1 e 2.
 
@@ -317,7 +317,7 @@ Terceira `NavbarTab`: remover `disabled`, adicionar:
 
 ---
 
-## FASE 4 — Toolbar e esqueleto das tabelas [Não Iniciada ⏳]
+## FASE 4 — Toolbar e esqueleto das tabelas [Concluída ✅]
 
 Depende da FASE 3.
 
@@ -376,7 +376,7 @@ Larguras de referência:
 
 ---
 
-## FASE 5 — Aba Obras: dados, filtragem e renderização [Não Iniciada ⏳]
+## FASE 5 — Aba Obras: dados, filtragem e renderização [Concluída ✅]
 
 Depende das FASES 2 e 4.
 
@@ -440,7 +440,7 @@ Tabela vazia (filtro sem resultado): `obras.length === 0` renderiza apenas o `Ta
 
 ---
 
-## FASE 6 — Aba Financeiro + Exportação CSV [Não Iniciada ⏳]
+## FASE 6 — Aba Financeiro + Exportação CSV [Concluída ✅]
 
 Depende da FASE 5.
 
@@ -485,7 +485,7 @@ O botão recebe `onClick={handleExportar}`.
 
 ---
 
-## FASE 7 — Documentação e qualidade [Não Iniciada ⏳]
+## FASE 7 — Documentação e qualidade [Concluída ✅]
 
 Depende de todas as fases anteriores.
 

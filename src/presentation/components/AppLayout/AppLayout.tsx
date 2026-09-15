@@ -47,7 +47,8 @@ export function AppLayout({ children }: AppLayoutProps) {
               label="Dashboards"
               aria-label="Dashboards"
               icon={<IconDashboard />}
-              disabled
+              active={pathname === "/dashboards"}
+              onClick={() => navigate("/dashboards")}
             />
             <NavbarTab
               size={size}
@@ -59,9 +60,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           </Navbar>
         }
       />
-      <main className="flex-1 w-full max-w-[800px] mx-auto pt-1200 px-300 pb-300 lg:px-0 lg:pb-0">
-        {children}
-      </main>
+      <main className="flex-1 w-full ">{children}</main>
     </div>
   );
 }

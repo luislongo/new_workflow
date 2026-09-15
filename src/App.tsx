@@ -3,6 +3,7 @@ import { container } from "./infrastructure/container";
 import { ContainerProvider } from "./presentation/context/ContainerContext";
 import { AppLayout } from "./presentation/components/AppLayout";
 import { AdicionarEmpreendimento } from "./presentation/screens/AdicionarEmpreendimento";
+import { Dashboard } from "./presentation/screens/Dashboard";
 
 function App() {
   return (
@@ -10,8 +11,9 @@ function App() {
       <ContainerProvider container={container}>
         <AppLayout>
           <Routes>
-            <Route path="/" element={<Navigate to="/empreendimento" replace />} />
+            <Route path="/" element={<Navigate to="/dashboards" replace />} />
             <Route path="/empreendimento" element={<AdicionarEmpreendimento />} />
+            <Route path="/dashboards" element={<Dashboard />} />
           </Routes>
         </AppLayout>
       </ContainerProvider>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type JSX } from "react";
 import {
   H1,
   ContentRow,
@@ -24,7 +24,7 @@ import { useMediaQuery } from "../../hooks/useMediaQuery";
 
 interface KpiConfig {
   color: InfoCardColor;
-  icon: ReactNode;
+  icon: JSX.Element;
 }
 
 const KPI_CONFIG: Record<string, KpiConfig> = {

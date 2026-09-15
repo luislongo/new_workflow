@@ -55,7 +55,8 @@ export function AppLayout({ children }: AppLayoutProps) {
               label="Relatórios"
               aria-label="Relatórios"
               icon={<IconEventNote />}
-              disabled
+              active={pathname === "/relatorios"}
+              onClick={() => navigate("/relatorios")}
             />
           </Navbar>
         }

@@ -4,6 +4,7 @@ import { ContainerProvider } from "./presentation/context/ContainerContext";
 import { AppLayout } from "./presentation/components/AppLayout";
 import { AdicionarEmpreendimento } from "./presentation/screens/AdicionarEmpreendimento";
 import { Dashboard } from "./presentation/screens/Dashboard";
+import { Relatorios } from "./presentation/screens/Relatorios";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
             <Route path="/" element={<Navigate to="/dashboards" replace />} />
             <Route path="/empreendimento" element={<AdicionarEmpreendimento />} />
             <Route path="/dashboards" element={<Dashboard />} />
+            <Route path="/relatorios" element={<Relatorios />} />
           </Routes>
         </AppLayout>
       </ContainerProvider>

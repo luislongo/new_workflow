@@ -47,7 +47,8 @@ export function AppLayout({ children }: AppLayoutProps) {
               label="Dashboards"
               aria-label="Dashboards"
               icon={<IconDashboard />}
-              disabled
+              active={pathname === "/dashboards"}
+              onClick={() => navigate("/dashboards")}
             />
             <NavbarTab
               size={size}

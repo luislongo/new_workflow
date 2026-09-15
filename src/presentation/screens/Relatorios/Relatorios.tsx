@@ -26,18 +26,40 @@ import {
   formatData,
 } from "../../../application/formatters";
 
-type Tab = "obras" | "financeiro";
+type AbaRelatorio = "obras" | "financeiro";
+
+// Datas do input são date-only; fixar o fuso em UTC mantém filtro e exibição
+// coerentes, e o fim do dia evita excluir registros com hora no último dia.
+function criarFiltro(
+  dataInicio: string,
+  dataFim: string,
+  busca: string,
+): FiltroRelatorio {
+  return {
+    dataInicio: new Date(`${dataInicio}T00:00:00.000Z`),
+    dataFim: new Date(`${dataFim}T23:59:59.999Z`),
+    busca,
+  };
+}
 
 export function Relatorios() {
   const [searchParams, setSearchParams] = useSearchParams();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   const tabParam = searchParams.get("tab");
-  const tab: Tab = tabParam === "financeiro" ? "financeiro" : "obras";
+  const tab: AbaRelatorio = tabParam === "financeiro" ? "financeiro" : "obras";
 
   const [busca, setBusca] = useState("");
   const [dataInicio, setDataInicio] = useState("2026-01-01");
   const [dataFim, setDataFim] = useState("2026-01-31");
+
+  // Cada aba busca campos diferentes, então o termo não sobrevive à troca de aba.
+  // Ajustar durante a render (e não no onClick) cobre também o botão voltar e deep links.
+  const [abaDaBusca, setAbaDaBusca] = useState(tab);
+  if (abaDaBusca !== tab) {
+    setAbaDaBusca(tab);
+    setBusca("");
+  }
 
   const [obras, setObras] = useState<Array<{
     indice: number;
@@ -51,17 +73,29 @@ export function Relatorios() {
   const { getRelatorioObras, getRelatorioFinanceiro, exportarRelatorio } =
     useContainer();
 
-  const handleTabChange = (novaTab: Tab) => {
-    setBusca("");
-    setSearchParams({ tab: novaTab });
+  const handleTabChange = (novaTab: AbaRelatorio) => {
+    setSearchParams(
+      (prev) => {
+        const proximo = new URLSearchParams(prev);
+        proximo.set("tab", novaTab);
+        return proximo;
+      },
+      { replace: true },
+    );
   };
 
+  // O intervalo nunca fica invertido: mover uma ponta além da outra arrasta a outra
+  // junto, em vez de descartar a entrada sem o usuário entender o porquê.
   const handleStartChange = (valor: string) => {
-    if (valor <= dataFim) setDataInicio(valor);
+    if (!valor) return;
+    setDataInicio(valor);
+    if (valor > dataFim) setDataFim(valor);
   };
 
   const handleEndChange = (valor: string) => {
-    if (valor >= dataInicio) setDataFim(valor);
+    if (!valor) return;
+    setDataFim(valor);
+    if (valor < dataInicio) setDataInicio(valor);
   };
 
   const handleExportar = () => {
@@ -82,14 +116,11 @@ export function Relatorios() {
 
   useEffect(() => {
     let ativo = true;
-    const filtro: FiltroRelatorio = {
-      dataInicio: new Date(dataInicio),
-      dataFim: new Date(dataFim),
-      busca,
-    };
-    getRelatorioObras.execute(filtro).then((r) => {
-      if (ativo) setObras(r);
-    });
+    getRelatorioObras
+      .execute(criarFiltro(dataInicio, dataFim, busca))
+      .then((r) => {
+        if (ativo) setObras(r);
+      });
     return () => {
       ativo = false;
     };
@@ -97,14 +128,11 @@ export function Relatorios() {
 
   useEffect(() => {
     let ativo = true;
-    const filtro: FiltroRelatorio = {
-      dataInicio: new Date(dataInicio),
-      dataFim: new Date(dataFim),
-      busca,
-    };
-    getRelatorioFinanceiro.execute(filtro).then((r) => {
-      if (ativo) setLancamentos(r);
-    });
+    getRelatorioFinanceiro
+      .execute(criarFiltro(dataInicio, dataFim, busca))
+      .then((r) => {
+        if (ativo) setLancamentos(r);
+      });
     return () => {
       ativo = false;
     };
@@ -114,6 +142,7 @@ export function Relatorios() {
 
   const placeholder =
     tab === "obras" ? "Buscar obras..." : "Buscar lançamentos...";
+  const tabSize = isDesktop ? "Large" : "Default";
 
   const toolbar = isDesktop ? (
     <div className="flex items-end gap-4">
@@ -176,7 +205,7 @@ export function Relatorios() {
   const tabelaObras = (
     <div className="overflow-x-auto">
       <TableHeaderRow className="shrink-0">
-        <TableHeaderCell className={`${isDesktop ? "w-14" : "w-12"} shrink-0`}>
+        <TableHeaderCell className={`${isDesktop ? "w-15" : "w-12"} shrink-0`}>
           #
         </TableHeaderCell>
         <TableHeaderCell
@@ -199,7 +228,7 @@ export function Relatorios() {
       </TableHeaderRow>
       {obras.map(({ indice, obra }) => (
         <TableRow key={obra.id} className="shrink-0">
-          <TableRowCell className={`${isDesktop ? "w-14" : "w-12"} shrink-0`}>
+          <TableRowCell className={`${isDesktop ? "w-15" : "w-12"} shrink-0`}>
             {String(indice).padStart(2, "0")}
           </TableRowCell>
           <TableRowCell
@@ -212,7 +241,7 @@ export function Relatorios() {
           </TableRowCell>
           <TableRowCell
             className={`${isDesktop ? "w-35" : "w-30"} shrink-0`}
-            alignment="center"
+            alignment="right"
           >
             {obra.percentualConcluido}%
           </TableRowCell>
@@ -233,59 +262,55 @@ export function Relatorios() {
   const tabelaFinanceiro = (
     <div className="overflow-x-auto">
       <TableHeaderRow className="shrink-0">
-        <TableHeaderCell className={`${isDesktop ? "w-14" : "w-12"} shrink-0`}>
+        <TableHeaderCell className={`${isDesktop ? "w-15" : "w-12"} shrink-0`}>
           #
         </TableHeaderCell>
         <TableHeaderCell className={`grow min-w-40 shrink-0 w-50`}>
           Descrição
         </TableHeaderCell>
-        <TableHeaderCell className={`${isDesktop ? "w-25" : "w-20"} shrink-0`}>
+        <TableHeaderCell className={`${isDesktop ? "w-35" : "w-20"} shrink-0`}>
           Tipo
         </TableHeaderCell>
-        <TableHeaderCell
-          className={`${isDesktop ? "w-[110px]" : "w-[90px]"} shrink-0`}
-        >
+        <TableHeaderCell className={`${isDesktop ? "w-35" : "w-22.5"} shrink-0`}>
           Data
         </TableHeaderCell>
-        <TableHeaderCell className={`${isDesktop ? "w-35" : "w-30"} shrink-0`}>
+        <TableHeaderCell className={`${isDesktop ? "w-40" : "w-30"} shrink-0`}>
           Valor
         </TableHeaderCell>
-        <TableHeaderCell className={`${isDesktop ? "w-35" : "w-30"} shrink-0`}>
+        <TableHeaderCell className={`${isDesktop ? "w-45" : "w-30"} shrink-0`}>
           Método
         </TableHeaderCell>
-        <TableHeaderCell
-          className={`${isDesktop ? "w-[110px]" : "w-[90px]"} shrink-0`}
-        >
+        <TableHeaderCell className={`${isDesktop ? "w-35" : "w-22.5"} shrink-0`}>
           Status
         </TableHeaderCell>
       </TableHeaderRow>
       {lancamentos.map(({ indice, lancamento }) => (
         <TableRow key={lancamento.id} className="shrink-0">
-          <TableRowCell className={`${isDesktop ? "w-14" : "w-12"} shrink-0`}>
+          <TableRowCell className={`${isDesktop ? "w-15" : "w-12"} shrink-0`}>
             {String(indice).padStart(2, "0")}
           </TableRowCell>
           <TableRowCell className={`grow-1 min-w-40 shrink-0 w-50`}>
             {lancamento.descricao}
           </TableRowCell>
-          <TableRowCell className={`${isDesktop ? "w-25" : "w-20"} shrink-0`}>
+          <TableRowCell className={`${isDesktop ? "w-35" : "w-20"} shrink-0`}>
             {lancamento.tipo}
           </TableRowCell>
           <TableRowCell
-            className={`${isDesktop ? "w-[110px]" : "w-[90px]"} shrink-0`}
+            className={`${isDesktop ? "w-35" : "w-22.5"} shrink-0`}
           >
             {formatData(lancamento.data)}
           </TableRowCell>
           <TableRowCell
-            className={`${isDesktop ? "w-35" : "w-30"} shrink-0`}
+            className={`${isDesktop ? "w-40" : "w-30"} shrink-0`}
             alignment="right"
           >
             {formatValor(lancamento.valor)}
           </TableRowCell>
-          <TableRowCell className={`${isDesktop ? "w-35" : "w-30"} shrink-0`}>
+          <TableRowCell className={`${isDesktop ? "w-45" : "w-30"} shrink-0`}>
             {lancamento.metodo}
           </TableRowCell>
           <TableRowCell
-            className={`${isDesktop ? "w-[110px]" : "w-[90px]"} shrink-0`}
+            className={`${isDesktop ? "w-35" : "w-22.5"} shrink-0`}
           >
             {lancamento.status}
           </TableRowCell>
@@ -297,20 +322,20 @@ export function Relatorios() {
   return (
     <div className="flex flex-col gap-4 lg:gap-6 p-4 lg:p-12 bg-light-900 min-h-full">
       <H1>Relatórios</H1>
-      <TabList size={isDesktop ? "Large" : "Default"} className="w-full">
+      <TabList size={tabSize} className="w-full">
         <Tab
           label="Obras"
-          size="Large"
+          size={tabSize}
           active={tab === "obras"}
           onClick={() => handleTabChange("obras")}
         />
         <Tab
           label="Financeiro"
-          size="Large"
+          size={tabSize}
           active={tab === "financeiro"}
           onClick={() => handleTabChange("financeiro")}
         />
-        <Tab label="Externo" size="Large" disabled />
+        <Tab label="Externo" size={tabSize} disabled />
       </TabList>
       {toolbar}
       {tab === "obras" ? tabelaObras : tabelaFinanceiro}

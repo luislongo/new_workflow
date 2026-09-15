@@ -16,6 +16,13 @@ export function formatValor(valor: number): string {
   }).format(valor);
 }
 
+// Datas do domínio são date-only (ISO "YYYY-MM-DD"), parseadas como meia-noite UTC.
+// Sem timeZone: "UTC" o fuso local (UTC-3) recuaria a exibição em um dia.
 export function formatData(data: Date): string {
-  return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" }).format(data);
+  return new Intl.DateTimeFormat("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(data);
 }

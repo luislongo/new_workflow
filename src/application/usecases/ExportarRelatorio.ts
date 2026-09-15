@@ -9,11 +9,18 @@ type ExportarInput =
   | { tipo: "obras"; itens: Array<{ indice: number; obra: Obra }>; nomeArquivo: string }
   | { tipo: "financeiro"; itens: Array<{ indice: number; lancamento: LancamentoFinanceiro }>; nomeArquivo: string };
 
+// Excel/Sheets executam como fórmula qualquer célula iniciada por = + - @ TAB ou CR,
+// mesmo entre aspas. O apóstrofo à frente força a leitura como texto.
+function neutralizarFormula(valor: string): string {
+  return /^[=+\-@\t\r]/.test(valor) ? `'${valor}` : valor;
+}
+
 function escaparCampo(valor: string): string {
-  if (/[";\n]/.test(valor)) {
-    return `"${valor.replace(/"/g, '""')}"`;
+  const seguro = neutralizarFormula(valor);
+  if (/[";\r\n]/.test(seguro)) {
+    return `"${seguro.replace(/"/g, '""')}"`;
   }
-  return valor;
+  return seguro;
 }
 
 function montarLinha(campos: string[]): string {
